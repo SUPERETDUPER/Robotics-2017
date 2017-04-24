@@ -30,15 +30,20 @@ import lejos.robotics.chassis.WheeledChassis;
  * implementation Static class
  */
 public class MyChassis extends WheeledChassis {
-	// TODO : make close port thread safe (don't allow creation after closing)
 
 	private static WheeledChassis mChassis;
 	private static EV3LargeRegulatedMotor leftMotor;
 	private static EV3LargeRegulatedMotor rightMotor;
+	private static boolean closed = false;
 
-	public static void closePorts() {
-		leftMotor.close();
-		rightMotor.close();
+	public synchronized static void closePorts() {
+		if (leftMotor != null) {
+			leftMotor.close();
+		}
+		if (rightMotor != null) {
+			rightMotor.close();
+		}
+		closed = true;
 	}
 
 	/**
@@ -69,9 +74,9 @@ public class MyChassis extends WheeledChassis {
 	 * @return the wheeled chassis
 	 */
 	public static WheeledChassis get() {
-		if (mChassis == null) {
+		if (mChassis == null && !closed) {
 			synchronized (MyChassis.class) {
-				if (mChassis == null) {
+				if (mChassis == null && !closed) {
 					mChassis = new MyChassis();
 				}
 			}
@@ -79,18 +84,18 @@ public class MyChassis extends WheeledChassis {
 		return mChassis;
 	}
 
-	public MyChassis() {
-		super(createWheels(), WheeledChassis.TYPE_DIFFERENTIAL);
-	}
-	// TODO : Examine location of method
 	/**
 	 * Turns chassis around
 	 */
-	// Turn robot around
-	public void turnAround() {
-		stop();
-		setAngularSpeed(GlobalConstants.ANGULAR_SPEED);
-		rotate(180);
-		waitComplete();
+	public static void turnAround(boolean waitForCompletion) {
+		get().stop();
+		get().setAngularSpeed(GlobalConstants.ANGULAR_SPEED);
+		get().rotate(180);
+		if (waitForCompletion) {
+			get().waitComplete();
+		}
+	}
+	public MyChassis() {
+		super(createWheels(), WheeledChassis.TYPE_DIFFERENTIAL);
 	}
 }

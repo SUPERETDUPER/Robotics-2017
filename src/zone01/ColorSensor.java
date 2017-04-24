@@ -21,6 +21,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 package zone01;
 
+import lejos.hardware.port.Port;
 import lejos.hardware.sensor.EV3ColorSensor;
 import lejos.robotics.SampleProvider;
 
@@ -33,43 +34,46 @@ import lejos.robotics.SampleProvider;
  * follower
  * 
  */
-public class ColorSensor {
+public class ColorSensor extends EV3ColorSensor {
 
-	private static ColorSensor mColorSensor = new ColorSensor();
+	private static int LENGTH_OF_RED_MODE_SAMPLE = 1;
+
+	private static ColorSensor sensorLeft;
+	private static ColorSensor sensorRight;
+	private static ColorSensor sensorClaw;
+	private static boolean closed = false;
+
+	// Samples providers for line following sensor
+	private static SampleProvider providerLeft;
+	private static SampleProvider providerRight;
+
+	private static final Object LEFT_LOCK = new Object();
+	private static final Object RIGHT_LOCK = new Object();
+	private static final Object CLAW_LOCK = new Object();
+
+	private static final float[] sample = new float[LENGTH_OF_RED_MODE_SAMPLE];
+
+	public synchronized static void closePorts() {
+		getLeft().close();
+		getRight().close();
+		getClaw().close();
+	}
 
 	/**
-	 * Singleton Pattern - Early Implementation Return an instance of the class
+	 * Gets the sensor on the claw.
 	 * 
-	 * @return the only instance of the class
+	 * @return the sensor on the claw
 	 */
-	public static ColorSensor get() {
-		return mColorSensor;
-	}
-	private EV3ColorSensor sensorLeft;
-	private EV3ColorSensor sensorRight;
-	private EV3ColorSensor sensorClaw;
-
-	// Sample providers for line following sensor
-	private SampleProvider providerLeft;
-	private SampleProvider providerRight;
-
-	private final float[] sample = new float[1];
-
-	private final Object LEFT_LOCK = new Object();
-	private final Object RIGHT_LOCK = new Object();
-	private final Object CLAW_LOCK = new Object();
-
-	/**
-	 * Instantiates a new color sensor. Used only at start. Do not make the
-	 * method time consuming or else review early implementation
-	 */
-	private ColorSensor() {
-	}
-
-	public void closePorts() {
-		sensorLeft.close();
-		sensorRight.close();
-		sensorClaw.close();
+	public static ColorSensor getClaw() {
+		if (sensorClaw == null && !closed) {
+			synchronized (CLAW_LOCK) {
+				if (sensorClaw == null && !closed) {
+					sensorClaw = new ColorSensor(
+							GlobalConstants.PORT_COLOR_CLAW);
+				}
+			}
+		}
+		return sensorClaw;
 	}
 
 	/**
@@ -79,49 +83,14 @@ public class ColorSensor {
 	 * @return the color ID of the inactive sensor. Returns -1 if lineFollower
 	 *         is not moving
 	 */
-	public int getColorIDInactive() {
-		if (!LineFollowerData.get().isMoving()) {
+	public static int getColorIDInactive() {
+		if (!LineFollowerData.isMoving()) {
 			return -1;
-		} else if (LineFollowerData.get().isSetToLeft()) {
-			return getSensorRight().getColorID();
+		} else if (LineFollowerData.isSetToLeft()) {
+			return getRight().getColorID();
 		} else {
-			return getSensorLeft().getColorID();
+			return getLeft().getColorID();
 		}
-	}
-
-	/**
-	 * ONLY FOR LINE FOLLOWER THREAD. Gets a reading from the active color
-	 * sensor (only if moving).
-	 * 
-	 * @return the sample reading active. Returns -1 if not moving
-	 */
-	public float getSampleReadingActive() {
-		if (!LineFollowerData.get().isMoving()) {
-			return -1;
-		} else if (LineFollowerData.get().isSetToLeft()) {
-			providerLeft.fetchSample(sample, 0);
-			return sample[0];
-		} else {
-			providerRight.fetchSample(sample, 0);
-			return sample[0];
-		}
-	}
-
-	/**
-	 * Gets the sensor on the claw.
-	 * 
-	 * @return the sensor on the claw
-	 */
-	public EV3ColorSensor getSensorClaw() {
-		if (sensorClaw == null) {
-			synchronized (CLAW_LOCK) {
-				if (sensorClaw == null) {
-					sensorClaw = new EV3ColorSensor(
-							GlobalConstants.PORT_COLOR_CLAW);
-				}
-			}
-		}
-		return sensorClaw;
 	}
 
 	/**
@@ -129,11 +98,11 @@ public class ColorSensor {
 	 * 
 	 * @return the left sensor
 	 */
-	public EV3ColorSensor getSensorLeft() {
-		if (sensorLeft == null) {
+	public static ColorSensor getLeft() {
+		if (sensorLeft == null && !closed) {
 			synchronized (LEFT_LOCK) {
-				if (sensorLeft == null) {
-					sensorLeft = new EV3ColorSensor(
+				if (sensorLeft == null && !closed) {
+					sensorLeft = new ColorSensor(
 							GlobalConstants.PORT_COLOR_LEFT);
 					providerLeft = sensorLeft.getRedMode();
 				}
@@ -147,16 +116,42 @@ public class ColorSensor {
 	 * 
 	 * @return the right sensor
 	 */
-	public EV3ColorSensor getSensorRight() {
-		if (sensorRight == null) {
+	public static ColorSensor getRight() {
+		if (sensorRight == null && !closed) {
 			synchronized (RIGHT_LOCK) {
-				if (sensorRight == null) {
-					sensorRight = new EV3ColorSensor(
+				if (sensorRight == null && !closed) {
+					sensorRight = new ColorSensor(
 							GlobalConstants.PORT_COLOR_RIGHT);
 					providerRight = sensorRight.getRedMode();
 				}
 			}
 		}
 		return sensorRight;
+	}
+
+	/**
+	 * ONLY FOR LINE FOLLOWER THREAD. Gets a reading from the active color
+	 * sensor (only if moving).
+	 * 
+	 * @return the sample reading active. Returns -1 if not moving
+	 */
+	public static float getSampleReadingActive() {
+		if (!LineFollowerData.isMoving()) {
+			return -1;
+		} else if (LineFollowerData.isSetToLeft()) {
+			providerLeft.fetchSample(sample, 0);
+			return sample[0];
+		} else {
+			providerRight.fetchSample(sample, 0);
+			return sample[0];
+		}
+	}
+
+	/**
+	 * Instantiates a new color sensor. Used only at start. Do not make the
+	 * method time consuming or else review early implementation
+	 */
+	private ColorSensor(Port port) {
+		super(port);
 	}
 }

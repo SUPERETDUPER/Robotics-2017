@@ -31,33 +31,17 @@ package zone01;
  * not
  * 3. Left/Right : Determines which side of the line to follow when moving
  * 
- * Singleton Pattern Early implementation
+ * Static class
  */
 public class LineFollowerData {
-	private static LineFollowerData mLineFollowerData = new LineFollowerData();
-
-	/**
-	 * Singleton Pattern - Early implementation
-	 * 
-	 * @return the line follower object
-	 */
-	public static LineFollowerData get() {
-		return mLineFollowerData;
-	}
-	private volatile boolean moving = false;
-	private volatile boolean ended = false;
-	private volatile boolean left = true;
-
-	/**
-	 * Singleton pattern Instantiates a new line follower data.
-	 */
-	private LineFollowerData() {
-	}
+	private static volatile boolean moving = false;
+	private static volatile boolean ended = false;
+	private static volatile boolean left = true;
 
 	/**
 	 * End line following and movement
 	 */
-	public void end() {
+	public static void end() {
 		ended = true;
 		moving = false;
 	}
@@ -67,7 +51,7 @@ public class LineFollowerData {
 	 * 
 	 * @return true, if is ended
 	 */
-	public boolean isEnded() {
+	public static boolean isEnded() {
 		return ended;
 	}
 
@@ -76,7 +60,7 @@ public class LineFollowerData {
 	 * 
 	 * @return true, if is moving
 	 */
-	public boolean isMoving() {
+	public static boolean isMoving() {
 		return moving;
 	}
 
@@ -85,7 +69,7 @@ public class LineFollowerData {
 	 * 
 	 * @return true, if it is set to the left
 	 */
-	public boolean isSetToLeft() {
+	public static boolean isSetToLeft() {
 		return left;
 	}
 
@@ -94,35 +78,35 @@ public class LineFollowerData {
 	 * 
 	 * @return true, if it is set to the right
 	 */
-	public boolean isSetToRight() {
+	public static boolean isSetToRight() {
 		return !left;
 	}
 
 	/**
 	 * Set the robot to the left Does not start the robot
 	 */
-	public void setToLeft() {
+	public static void setToLeft() {
 		left = true;
 	}
 
 	/**
 	 * Set the robot to the right Does not start the robot
 	 */
-	public void setToRight() {
+	public static void setToRight() {
 		left = false;
 	}
 
 	/**
 	 * Starts the robot Thread must already be running
 	 */
-	public void start() {
+	public static void start() {
 		moving = true;
 	}
 
 	/**
 	 * Stops the robot Can be restarted with {@link start}
 	 */
-	public void stop() {
+	public static void stop() {
 		moving = false;
 	}
 }

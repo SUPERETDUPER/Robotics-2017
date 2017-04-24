@@ -24,34 +24,65 @@ package zone01;
 import lejos.hardware.sensor.EV3UltrasonicSensor;
 import lejos.robotics.SampleProvider;
 
-public class UltrasonicSensor {
-	public static UltrasonicSensor get() {
-		if (mUltrasonicSensor == null) {
-			synchronized (UltrasonicSensor.class) {
-				if (mUltrasonicSensor == null) {
-					mUltrasonicSensor = new UltrasonicSensor();
+/**
+ * The Class MyUltrasonic.
+ */
+public class MyUltrasonic extends EV3UltrasonicSensor {
+	private static MyUltrasonic mSensor;
+
+	private static SampleProvider mSampleProvider;
+
+	private static float[] sample = new float[1];
+
+	private static boolean closed = false;
+
+	/**
+	 * Closes ultrasonicPort
+	 */
+	public synchronized static void closePort() {
+		get().close();
+		closed = true;
+	}
+
+	/**
+	 * 
+	 * Gets the ultrasonic sensor
+	 * 
+	 * @return the ultrasonic sensor
+	 */
+	private static MyUltrasonic get() {
+		if (mSensor == null && !closed) {
+			synchronized (MyUltrasonic.class) {
+				if (mSensor == null && !closed) {
+					mSensor = new MyUltrasonic();
 				}
 			}
 		}
-		return mUltrasonicSensor;
-	}
-	private final EV3UltrasonicSensor sensor;
-	private final SampleProvider mSampleProvider;
-	private final float[] sample = new float[1];
-
-	private static UltrasonicSensor mUltrasonicSensor;
-
-	private UltrasonicSensor() {
-		sensor = new EV3UltrasonicSensor(GlobalConstants.PORT_ULTRASONIC);
-		mSampleProvider = sensor.getDistanceMode();
+		return mSensor;
 	}
 
-	public void closePort() {
-		sensor.close();
-	}
-
-	public float getDistance() {
+	/**
+	 * Gets the current distance in meters
+	 * 
+	 * @return the distance in meters
+	 */
+	public static float getDistance() {
+		if (mSampleProvider == null) {
+			synchronized (get()) {
+				if (mSampleProvider == null) {
+					mSampleProvider = get().getDistanceMode();
+				}
+			}
+		}
 		mSampleProvider.fetchSample(sample, 0);
 		return sample[0];
+	}
+
+	/**
+	 * 
+	 * Instantiates a new my ultrasonic.
+	 */
+	private MyUltrasonic() {
+		super(GlobalConstants.PORT_ULTRASONIC);
 	}
 }

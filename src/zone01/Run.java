@@ -35,12 +35,12 @@ public class Run {
 	 * Ends the program. To be called before termination to avoid memory leaks.
 	 */
 	public static void end() {
-		LineFollowerData.get().end();
+		LineFollowerData.end();
 		MyChassis.closePorts();
 		Lift.closePort();
 		Claw.closePort();
 		ColorSensor.closePorts();
-		UltrasonicSensor.closePort();
+		MyUltrasonic.closePort();
 		System.exit(0);
 	}
 

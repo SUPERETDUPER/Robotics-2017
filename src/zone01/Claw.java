@@ -47,6 +47,53 @@ public class Claw extends EV3MediumRegulatedMotor {
 	private static Claw claw;
 
 	/**
+	 * Calibrate the claw.
+	 */
+	public static void calibrateClaw() {
+		if (status == Claw.STATUS_UNCALIBRATED) {
+			// Turn until stall
+			get().setSpeed(GlobalConstants.CLAW_SPEED);
+			get().backward();
+			while (!get().isStalled()) {
+				Delay.msDelay(GlobalConstants.IDLE_LOOP_LONG_DELAY);
+			}
+
+			// Open claw
+			get().rotate(GlobalConstants.CLAW_DEGREES);
+
+			// Reset_tacho_count
+			get().resetTachoCount();
+
+			// Update status
+			status = Claw.STATUS_OPENED;
+		}
+	}
+
+	/**
+	 * Close claw.
+	 */
+	public static void closeClaw() {
+		// Calibrate if needed
+		if (status == Claw.STATUS_UNCALIBRATED) {
+			calibrateClaw();
+		}
+
+		// If opened
+		if (status == Claw.STATUS_OPENED) {
+			// close claw
+			get().setSpeed(GlobalConstants.CLAW_SPEED);
+			get().backward();
+			while (!get().isStalled()) {
+				Delay.msDelay(GlobalConstants.IDLE_LOOP_LONG_DELAY);
+			}
+			get().stop(true);
+
+			// Update status
+			status = Claw.STATUS_CLOSED;
+		}
+	}
+
+	/**
 	 * Closes port if open and stops new claw creation
 	 */
 	public synchronized static void closePort() {
@@ -62,7 +109,7 @@ public class Claw extends EV3MediumRegulatedMotor {
 	 * 
 	 * @return the claw object
 	 */
-	public static Claw get() {
+	private static Claw get() {
 		// If claw never created and not ended
 		if (claw == null && status != STATUS_ENDED) {
 			synchronized (Claw.class) {
@@ -75,63 +122,9 @@ public class Claw extends EV3MediumRegulatedMotor {
 	}
 
 	/**
-	 * Instantiates a new claw object. Private so that only one instance can be
-	 * created by getClaw
-	 */
-	private Claw() {
-		super(GlobalConstants.PORT_MOTOR_CLAW);
-	}
-
-	/**
-	 * Calibrate the claw.
-	 */
-	public void calibrateClaw() {
-		if (status == Claw.STATUS_UNCALIBRATED) {
-			// Turn until stall
-			setSpeed(GlobalConstants.CLAW_SPEED);
-			backward();
-			while (!this.isStalled()) {
-				Delay.msDelay(GlobalConstants.IDLE_LOOP_LONG_DELAY);
-			}
-
-			// Open claw
-			rotate(GlobalConstants.CLAW_DEGREES);
-
-			// Reset_tacho_count
-			resetTachoCount();
-
-			// Update status
-			status = Claw.STATUS_OPENED;
-		}
-	}
-
-	/**
-	 * Close claw.
-	 */
-	public void closeClaw() {
-		// Calibrate if needed
-		if (status == Claw.STATUS_UNCALIBRATED) {
-			calibrateClaw();
-		}
-
-		// If opened
-		if (status == Claw.STATUS_OPENED) {
-			// close claw
-			setSpeed(GlobalConstants.CLAW_SPEED);
-			backward();
-			while (!this.isStalled()) {
-				Delay.msDelay(GlobalConstants.IDLE_LOOP_LONG_DELAY);
-			}
-			stop(true);
-
-			// Update status
-			status = Claw.STATUS_CLOSED;
-		}
-	}
-	/**
 	 * Opens claw.
 	 */
-	public void openClaw() {
+	public static void openClaw() {
 		// Calibrate if needed
 		if (status == Claw.STATUS_UNCALIBRATED) {
 			calibrateClaw();
@@ -140,15 +133,22 @@ public class Claw extends EV3MediumRegulatedMotor {
 		// If closed
 		if (status == Claw.STATUS_CLOSED) {
 			// Open claw
-			setSpeed(GlobalConstants.CLAW_SPEED);
-			forward();
-			while (this.getTachoCount() < 0) {
+			get().setSpeed(GlobalConstants.CLAW_SPEED);
+			get().forward();
+			while (get().getTachoCount() < 0) {
 				Delay.msDelay(GlobalConstants.IDLE_LOOP_SHORT_DELAY);
 			}
-			stop(true);
+			get().stop(true);
 
 			// Update status
 			status = Claw.STATUS_OPENED;
 		}
+	}
+	/**
+	 * Instantiates a new claw object. Private so that only one instance can be
+	 * created by getClaw
+	 */
+	private Claw() {
+		super(GlobalConstants.PORT_MOTOR_CLAW);
 	}
 }

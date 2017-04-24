@@ -48,14 +48,14 @@ public final class LineFollower implements Runnable {
 		float derivative;
 		float error;
 
-		while (!LineFollowerData.get().isEnded()) {
-			if (LineFollowerData.get().isMoving()) {
-				synchronized (MyChassis.getChassis()) {
+		while (!LineFollowerData.isEnded()) {
+			if (LineFollowerData.isMoving()) {
+				synchronized (MyChassis.get()) {
 					// Nested while loop to execute code when stopped
-					while (LineFollowerData.get().isMoving()) {
+					while (LineFollowerData.isMoving()) {
 						// Calculate error
 						error = GlobalConstants.MIDPOINT
-								- ColorSensor.get().getSampleReadingActive();
+								- ColorSensor.getSampleReadingActive();
 
 						// Calculate correction
 						integral += error;
@@ -66,12 +66,12 @@ public final class LineFollower implements Runnable {
 								+ GlobalConstants.KD * derivative;
 
 						// Switch correction if side switches
-						if (LineFollowerData.get().isSetToRight()) {
+						if (LineFollowerData.isSetToRight()) {
 							correction *= -1;
 						}
 
 						// Set velocity
-						MyChassis.getChassis().setVelocity(
+						MyChassis.get().setVelocity(
 								GlobalConstants.LINEAR_SPEED, correction);
 
 						// Wait
@@ -80,7 +80,7 @@ public final class LineFollower implements Runnable {
 					}
 					// Executed when no longer moving
 					// Stop chassis
-					MyChassis.getChassis().stop();
+					MyChassis.get().stop();
 				}
 			}
 			Delay.msDelay(GlobalConstants.IDLE_LOOP_LONG_DELAY);
