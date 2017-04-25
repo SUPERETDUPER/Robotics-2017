@@ -23,16 +23,18 @@ package zone01;
 
 import lejos.hardware.port.Port;
 import lejos.hardware.sensor.EV3ColorSensor;
+import lejos.robotics.Color;
 import lejos.robotics.SampleProvider;
+import lejos.utility.Delay;
 
 /**
  * The Class ColorSensor. Responsible for access to all color sensors. Provides
  * easy access to line following color sensor red mode and color id of none line
  * following
- * 
+ *
  * Active : Currently used by line follower Inactive : Sensor not used by line
  * follower
- * 
+ *
  */
 public class ColorSensor extends EV3ColorSensor {
 
@@ -54,14 +56,21 @@ public class ColorSensor extends EV3ColorSensor {
 	private static final float[] sample = new float[LENGTH_OF_RED_MODE_SAMPLE];
 
 	public synchronized static void closePorts() {
-		getLeft().close();
-		getRight().close();
-		getClaw().close();
+		if (sensorLeft != null) {
+			getLeft().close();
+		}
+		if (sensorRight != null) {
+			getRight().close();
+		}
+		if (sensorClaw != null) {
+			getClaw().close();
+		}
+		closed = true;
 	}
 
 	/**
 	 * Gets the sensor on the claw.
-	 * 
+	 *
 	 * @return the sensor on the claw
 	 */
 	public static ColorSensor getClaw() {
@@ -79,13 +88,14 @@ public class ColorSensor extends EV3ColorSensor {
 	/**
 	 * Gets the color ID of what the line follower is not using. Should not be
 	 * used if line follower is not moving
-	 * 
+	 *
 	 * @return the color ID of the inactive sensor. Returns -1 if lineFollower
 	 *         is not moving
 	 */
 	public static int getColorIDInactive() {
 		if (!LineFollowerData.isMoving()) {
-			return -1;
+			throw new RuntimeException(
+					"Called for inactive color ID but line follower not active");
 		} else if (LineFollowerData.isSetToLeft()) {
 			return getRight().getColorID();
 		} else {
@@ -95,7 +105,7 @@ public class ColorSensor extends EV3ColorSensor {
 
 	/**
 	 * Gets the left sensor.
-	 * 
+	 *
 	 * @return the left sensor
 	 */
 	public static ColorSensor getLeft() {
@@ -113,7 +123,7 @@ public class ColorSensor extends EV3ColorSensor {
 
 	/**
 	 * Gets the right sensor.
-	 * 
+	 *
 	 * @return the right sensor
 	 */
 	public static ColorSensor getRight() {
@@ -132,12 +142,13 @@ public class ColorSensor extends EV3ColorSensor {
 	/**
 	 * ONLY FOR LINE FOLLOWER THREAD. Gets a reading from the active color
 	 * sensor (only if moving).
-	 * 
+	 *
 	 * @return the sample reading active. Returns -1 if not moving
 	 */
 	public static float getSampleReadingActive() {
 		if (!LineFollowerData.isMoving()) {
-			return -1;
+			throw new RuntimeException(
+					"Called for active color sensor reading but line follower not moving");
 		} else if (LineFollowerData.isSetToLeft()) {
 			providerLeft.fetchSample(sample, 0);
 			return sample[0];
@@ -147,6 +158,16 @@ public class ColorSensor extends EV3ColorSensor {
 		}
 	}
 
+	public static void waitForBlackLine() {
+		int color;
+		while (true) {
+			color = getColorIDInactive();
+			if (color == Color.BLACK) {
+				break;
+			}
+			Delay.msDelay(GlobalConstants.IDLE_LOOP_SHORT_DELAY);
+		}
+	}
 	/**
 	 * Instantiates a new color sensor. Used only at start. Do not make the
 	 * method time consuming or else review early implementation

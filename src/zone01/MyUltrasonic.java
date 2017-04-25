@@ -40,14 +40,18 @@ public class MyUltrasonic extends EV3UltrasonicSensor {
 	 * Closes ultrasonicPort
 	 */
 	public synchronized static void closePort() {
-		get().close();
+		if (mSensor == null) {
+
+		} else {
+			get().close();
+		}
 		closed = true;
 	}
 
 	/**
-	 * 
+	 *
 	 * Gets the ultrasonic sensor
-	 * 
+	 *
 	 * @return the ultrasonic sensor
 	 */
 	private static MyUltrasonic get() {
@@ -63,7 +67,7 @@ public class MyUltrasonic extends EV3UltrasonicSensor {
 
 	/**
 	 * Gets the current distance in meters
-	 * 
+	 *
 	 * @return the distance in meters
 	 */
 	public static float getDistance() {
@@ -79,7 +83,7 @@ public class MyUltrasonic extends EV3UltrasonicSensor {
 	}
 
 	/**
-	 * 
+	 *
 	 * Instantiates a new my ultrasonic.
 	 */
 	private MyUltrasonic() {

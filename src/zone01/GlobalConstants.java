@@ -53,17 +53,17 @@ public final class GlobalConstants {
 
 	// TODO : Set values
 	// Values for Lift
-	final static int LIFT_DEGREES = 0;
-	final static int LIFT_SPEED = 0;
+	final static int LIFT_DEGREES = 360;
+	final static int LIFT_SPEED = 500;
 
-	// TODO : Set values
+	// TODO : Reduce for effecicency
 	// Values for Claw
-	final static int CLAW_SPEED = 0;
-	final static int CLAW_DEGREES = 0;
+	// final static int CLAW_SPEED = 500; USING MAX SPEED
+	final static int CLAW_DEGREES = 2000;
 
 	// TODO : Set values
 	// Values for line following
-	final static int LINEAR_SPEED = 0;
+	final static int LINEAR_SPEED_LINE = 0;
 	final static int KP = 1;
 	final static int KI = 0;
 	final static int KD = 0;
@@ -76,4 +76,9 @@ public final class GlobalConstants {
 	// TODO : Set Values
 	// Chassis operations
 	final static int ANGULAR_SPEED = 0;
+
+	// Helper
+	// Pickup object
+	final static int LINEAR_SPEED_SLOW = 0;
+	final static int DISTANCE_CLAW_TO_SENSOR = 0;
 }

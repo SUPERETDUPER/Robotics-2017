@@ -72,7 +72,7 @@ public final class LineFollower implements Runnable {
 
 						// Set velocity
 						MyChassis.get().setVelocity(
-								GlobalConstants.LINEAR_SPEED, correction);
+								GlobalConstants.LINEAR_SPEED_LINE, correction);
 
 						// Wait
 						Delay.msDelay(GlobalConstants.IDLE_LOOP_SHORT_DELAY);

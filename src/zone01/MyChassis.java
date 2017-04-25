@@ -48,7 +48,7 @@ public class MyChassis extends WheeledChassis {
 
 	/**
 	 * Creates the chassis.
-	 * 
+	 *
 	 * @return the wheeled chassis
 	 */
 	private static Wheel[] createWheels() {
@@ -56,13 +56,13 @@ public class MyChassis extends WheeledChassis {
 		rightMotor = new EV3LargeRegulatedMotor(
 				GlobalConstants.PORT_MOTOR_RIGHT);
 
-		Wheel wheelLeft = WheeledChassis.modelWheel(leftMotor,
-				GlobalConstants.WHEEL_DIAMETER).offset(
-				-GlobalConstants.AXIS_LENGTH / 2);
+		Wheel wheelLeft = WheeledChassis
+				.modelWheel(leftMotor, GlobalConstants.WHEEL_DIAMETER)
+				.offset(-GlobalConstants.AXIS_LENGTH / 2);
 
-		Wheel wheelRight = WheeledChassis.modelWheel(rightMotor,
-				GlobalConstants.WHEEL_DIAMETER).offset(
-				GlobalConstants.AXIS_LENGTH / 2);
+		Wheel wheelRight = WheeledChassis
+				.modelWheel(rightMotor, GlobalConstants.WHEEL_DIAMETER)
+				.offset(GlobalConstants.AXIS_LENGTH / 2);
 
 		return new Wheel[]{wheelLeft, wheelRight};
 	}
@@ -70,7 +70,7 @@ public class MyChassis extends WheeledChassis {
 	/**
 	 * Gets the chassis object Time consuming ofn first call because requires
 	 * implementation of two motors.
-	 * 
+	 *
 	 * @return the wheeled chassis
 	 */
 	public static WheeledChassis get() {
@@ -95,7 +95,13 @@ public class MyChassis extends WheeledChassis {
 			get().waitComplete();
 		}
 	}
-	public MyChassis() {
+	private MyChassis() {
 		super(createWheels(), WheeledChassis.TYPE_DIFFERENTIAL);
+	}
+
+	public static void moveToUltrasonicDistance(int distance, int linearSpeed) {
+		float distanceToTravel = MyUltrasonic.getDistance() - distance;
+		get().setLinearSpeed(linearSpeed);
+		get().travel(distanceToTravel);
 	}
 }

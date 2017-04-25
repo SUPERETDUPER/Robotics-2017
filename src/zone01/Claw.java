@@ -28,9 +28,9 @@ import lejos.utility.Delay;
 /**
  * The Class Claw. Responsible for all claw operations. Singleton Pattern. Auto
  * calibrates on first operation
- * 
+ *
  * Results unpredictable if you use super methods.
- * 
+ *
  * @author superetduper
  */
 public class Claw extends EV3MediumRegulatedMotor {
@@ -52,7 +52,7 @@ public class Claw extends EV3MediumRegulatedMotor {
 	public static void calibrateClaw() {
 		if (status == Claw.STATUS_UNCALIBRATED) {
 			// Turn until stall
-			get().setSpeed(GlobalConstants.CLAW_SPEED);
+			get().setSpeed(get().getMaxSpeed());
 			get().backward();
 			while (!get().isStalled()) {
 				Delay.msDelay(GlobalConstants.IDLE_LOOP_LONG_DELAY);
@@ -81,7 +81,7 @@ public class Claw extends EV3MediumRegulatedMotor {
 		// If opened
 		if (status == Claw.STATUS_OPENED) {
 			// close claw
-			get().setSpeed(GlobalConstants.CLAW_SPEED);
+			get().setSpeed(get().getMaxSpeed());
 			get().backward();
 			while (!get().isStalled()) {
 				Delay.msDelay(GlobalConstants.IDLE_LOOP_LONG_DELAY);
@@ -106,7 +106,7 @@ public class Claw extends EV3MediumRegulatedMotor {
 
 	/**
 	 * Gets the claw object and creates it if necessary Lazy implementation.
-	 * 
+	 *
 	 * @return the claw object
 	 */
 	private static Claw get() {
@@ -125,6 +125,9 @@ public class Claw extends EV3MediumRegulatedMotor {
 	 * Opens claw.
 	 */
 	public static void openClaw() {
+		openClaw(false);
+	}
+	public static void openClaw(boolean immediateReturn) {
 		// Calibrate if needed
 		if (status == Claw.STATUS_UNCALIBRATED) {
 			calibrateClaw();
@@ -133,12 +136,12 @@ public class Claw extends EV3MediumRegulatedMotor {
 		// If closed
 		if (status == Claw.STATUS_CLOSED) {
 			// Open claw
-			get().setSpeed(GlobalConstants.CLAW_SPEED);
-			get().forward();
-			while (get().getTachoCount() < 0) {
-				Delay.msDelay(GlobalConstants.IDLE_LOOP_SHORT_DELAY);
+			get().setSpeed(get().getMaxSpeed());
+			if (immediateReturn) {
+				get().rotate(-get().getTachoCount(), true);
+			} else {
+				get().rotate(-get().getTachoCount());
 			}
-			get().stop(true);
 
 			// Update status
 			status = Claw.STATUS_OPENED;

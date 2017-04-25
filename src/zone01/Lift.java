@@ -28,7 +28,7 @@ import lejos.utility.Delay;
 /**
  * The Class Lift. Responsible for all lift operations. Calibrates on first use.
  * Singleton pattern
- * 
+ *
  * @author superetduper
  */
 public class Lift extends EV3LargeRegulatedMotor {
@@ -51,6 +51,7 @@ public class Lift extends EV3LargeRegulatedMotor {
 		if (status == Lift.STATUS_UNCALIBRATED) {
 			// Turn until stall
 			get().setSpeed(GlobalConstants.LIFT_SPEED);
+			Claw.openClaw();
 			get().backward();
 			while (!get().isStalled()) {
 				Delay.msDelay(GlobalConstants.IDLE_LOOP_LONG_DELAY);
@@ -80,7 +81,7 @@ public class Lift extends EV3LargeRegulatedMotor {
 
 	/**
 	 * Gets the claw object and creates it if necessary Lazy implementation.
-	 * 
+	 *
 	 * @return the claw object
 	 */
 	private static Lift get() {

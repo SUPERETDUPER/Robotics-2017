@@ -24,12 +24,28 @@ package zone01;
 
 import lejos.hardware.Button;
 import lejos.hardware.KeyListener;
+import lejos.hardware.Sound;
+import lejos.utility.Delay;
 
 /**
  * @author superetduper
- * 
+ *
  */
 public class Run {
+
+	public static void addEscapeKeyListner() {
+		Button.ESCAPE.addKeyListener(new KeyListener() {
+
+			@Override
+			public void keyPressed(lejos.hardware.Key k) {
+			}
+
+			@Override
+			public void keyReleased(lejos.hardware.Key k) {
+				end();
+			}
+		});
+	}
 
 	/**
 	 * Ends the program. To be called before termination to avoid memory leaks.
@@ -46,7 +62,7 @@ public class Run {
 
 	/**
 	 * Main method. Runs on launch.
-	 * 
+	 *
 	 * @param args arguments
 	 */
 	public static void main(String[] args) {
@@ -55,16 +71,17 @@ public class Run {
 		Thread lineThread = new Thread(new LineFollower());
 		lineThread.start();
 
-		Button.ESCAPE.addKeyListener(new KeyListener() {
+		addEscapeKeyListner();
 
-			@Override
-			public void keyPressed(lejos.hardware.Key k) {
-			}
+		Lift.raiseLift();
 
-			@Override
-			public void keyReleased(lejos.hardware.Key k) {
-				end();
-			}
-		});
+		Delay.msDelay(5000);
+		Sound.beep();
+		Lift.lowerLift();
+		Delay.msDelay(5000);
+		Sound.beep();
+		Lift.raiseLift();
+		end();
+
 	}
 }
