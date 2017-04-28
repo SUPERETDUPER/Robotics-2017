@@ -29,6 +29,10 @@ import lejos.robotics.chassis.WheeledChassis;
  * The Class ChassisHelper Responsible for control of robot movement Lazy
  * implementation Static class
  */
+/**
+ * @author superetduper
+ *
+ */
 public class MyChassis extends WheeledChassis {
 
 	private static WheeledChassis mChassis;
@@ -84,10 +88,21 @@ public class MyChassis extends WheeledChassis {
 		return mChassis;
 	}
 
-	public static void moveToUltrasonicDistance(int distance, int linearSpeed) {
-		float distanceToTravel = MyUltrasonic.getDistance() - distance;
+	/**
+	 * TODO : Change to lne following pickup
+	 * Move to robot to a certain ultrasonic reading.
+	 *
+	 * @param distance to aim for (in meters)
+	 * @param linearSpeed the linear speed
+	 */
+	public static void moveToUltrasonicDistance(float distance, int linearSpeed,
+			boolean imediateReturn) {
+		float distanceToTravel = (MyUltrasonic.getDistance() - distance) * 1000;
 		get().setLinearSpeed(linearSpeed);
 		get().travel(distanceToTravel);
+		if (!imediateReturn) {
+			get().waitComplete();
+		}
 	}
 	/**
 	 * Turns chassis around

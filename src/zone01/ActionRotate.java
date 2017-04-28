@@ -13,4 +13,10 @@ public class ActionRotate implements ActionBase {
 		LineFollowerData.stop();
 		MyChassis.get().rotate(angle);
 	}
+
+	@Override
+	public String getLogMessage() {
+		return "Rotate " + angle + " degrees.";
+	}
+
 }

@@ -12,7 +12,6 @@ public class ActionFollowTillLine implements ActionBase {
 		colorToWaitFor = Color.BLACK;
 	}
 	public ActionFollowTillLine(boolean followLeft, int colorToWaitFor) {
-		// TODO Auto-generated constructor stub
 		this.followLeft = followLeft;
 		this.colorToWaitFor = colorToWaitFor;
 
@@ -28,5 +27,16 @@ public class ActionFollowTillLine implements ActionBase {
 		LineFollowerData.start();
 		ColorSensor.waitForLineInactive(colorToWaitFor);
 		LineFollowerData.stop();
+	}
+	@Override
+	public String getLogMessage() {
+		String message = "Follow line on ";
+		if (followLeft) {
+			message += "left";
+		} else {
+			message += "right";
+		}
+		message += ", until intersection (color " + colorToWaitFor + ").";
+		return message;
 	}
 }

@@ -36,10 +36,10 @@ public final class GlobalConstants {
 	static final Port PORT_MOTOR_RIGHT = MotorPort.B;
 	static final Port PORT_MOTOR_LIFT = MotorPort.C;
 	static final Port PORT_MOTOR_CLAW = MotorPort.D;
-	static final Port PORT_ULTRASONIC = SensorPort.S1;
+	static final Port PORT_ULTRASONIC = SensorPort.S4;
 	static final Port PORT_COLOR_LEFT = SensorPort.S2;
 	static final Port PORT_COLOR_RIGHT = SensorPort.S3;
-	static final Port PORT_COLOR_CLAW = SensorPort.S4;
+	static final Port PORT_COLOR_CLAW = SensorPort.S1;
 
 	// TODO : Test values especially with line follower
 	// Delays between loops to reduce CPU usage
@@ -48,13 +48,14 @@ public final class GlobalConstants {
 
 	// TODO : Set values
 	// Values for Chassis
-	static final double WHEEL_DIAMETER = 0;
-	static final double AXIS_LENGTH = 0;
+	static final double WHEEL_DIAMETER = 56; // Millimeters
+	static final double AXIS_LENGTH = 168; // Millimeters
 
 	// TODO : Set values
 	// Values for Lift
-	final static int LIFT_DEGREES = 330;
-	final static int LIFT_SPEED = 500;
+	final static int LIFT_DEGREES_CALIBRATE = 140;
+	final static int LIFT_DEGREES = 260;
+	final static int LIFT_SPEED = 600;
 
 	// TODO : Reduce for effecicency
 	// Values for Claw
@@ -71,15 +72,15 @@ public final class GlobalConstants {
 
 	// TODO : Set Values
 	// Actions speeds
-	final static int ANGULAR_SPEED_SLOW = 0;
-	final static int ANGULAR_SPEED_FAST = 0;
-	final static int LINEAR_SPEED_SLOW = 0;
-	final static int LINEAR_SPEED_FAST = 0;
+	final static int ANGULAR_SPEED_SLOW = 30; // Degrees per second
+	final static int ANGULAR_SPEED_FAST = 30; // Degrees per second
+	final static int LINEAR_SPEED_SLOW = 100; // Millimeters per second
+	final static int LINEAR_SPEED_FAST = 100; // Millimeters per second
 
 	// Navigation constants
 	final static float DISTANCE_TO_ENTER_GREEN_ZONE = 0;
 
 	// Helper
 	// Pickup object
-	final static int DISTANCE_CLAW_TO_SENSOR = 0;
+	final static float DISTANCE_CLAW_TO_SENSOR = (float) 0.05;
 }

@@ -24,4 +24,14 @@ public class ActionTravelToLine implements ActionBase {
 		}
 		MyChassis.get().stop();
 	}
+
+	@Override
+	public String getLogMessage() {
+		String message = "Travel straight to line";
+		if (lineUp) {
+			message += " and line up";
+		}
+		message += ".";
+		return message;
+	}
 }

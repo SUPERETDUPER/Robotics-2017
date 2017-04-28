@@ -121,12 +121,9 @@ public class Claw extends EV3MediumRegulatedMotor {
 		return claw;
 	}
 
-	public static void markAsCalibrated(boolean isOpen) {
-		if (isOpen) {
-			status = STATUS_OPENED;
-		} else {
-			status = STATUS_CLOSED;
-		}
+	public static void markAsOpen() {
+		status = STATUS_OPENED;
+		get().resetTachoCount();
 	}
 	/**
 	 * Opens claw.

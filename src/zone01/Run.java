@@ -24,8 +24,6 @@ package zone01;
 
 import lejos.hardware.Button;
 import lejos.hardware.KeyListener;
-import lejos.hardware.Sound;
-import lejos.utility.Delay;
 
 /**
  * @author superetduper
@@ -66,24 +64,14 @@ public class Run {
 	 * @param args arguments
 	 */
 	public static void main(String[] args) {
+		addEscapeKeyListner();
 
 		// Start line follower
 		Thread lineThread = new Thread(new LineFollower());
 		lineThread.start();
 
-		addEscapeKeyListner();
-
-		Claw.markAsCalibrated(true);
-
-		Lift.raiseLift();
-
-		Delay.msDelay(5000);
-		Sound.beep();
-		Lift.lowerLift();
-		Delay.msDelay(5000);
-		Sound.beep();
-		Lift.raiseLift();
+		Helper.pickupObject();
+		Helper.dropObject();
 		end();
-
 	}
 }

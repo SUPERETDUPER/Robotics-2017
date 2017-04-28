@@ -11,4 +11,9 @@ public class ActionTravel implements ActionBase {
 	public void execute() {
 		MyChassis.get().travel(distance);
 	}
+
+	@Override
+	public String getLogMessage() {
+		return "Travel " + distance + "units.";
+	}
 }

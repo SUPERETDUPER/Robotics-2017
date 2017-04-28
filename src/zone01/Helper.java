@@ -3,21 +3,12 @@ package zone01;
 import java.util.ArrayList;
 
 public class Helper {
-	public static void pickupObject() {
-		Claw.openClaw();
-		MyChassis.moveToUltrasonicDistance(
-				GlobalConstants.DISTANCE_CLAW_TO_SENSOR,
-				GlobalConstants.LINEAR_SPEED_SLOW);
-
-		Lift.lowerLift();
-		Claw.closeClaw();
-	}
 	public static void dropObject() {
 		Lift.raiseLift();
 
 		MyChassis.moveToUltrasonicDistance(
 				GlobalConstants.DISTANCE_CLAW_TO_SENSOR,
-				GlobalConstants.LINEAR_SPEED_SLOW);
+				GlobalConstants.LINEAR_SPEED_SLOW, false);
 
 		Claw.openClaw();
 	}
@@ -25,5 +16,15 @@ public class Helper {
 		for (int i = 0; i < sequence.size(); i++) {
 			sequence.get(i).execute();
 		}
+	}
+	public static void pickupObject() {
+		Claw.openClaw(true);
+		Lift.raiseLift();
+		MyChassis.moveToUltrasonicDistance(
+				GlobalConstants.DISTANCE_CLAW_TO_SENSOR,
+				GlobalConstants.LINEAR_SPEED_SLOW, true);
+
+		Lift.lowerLift();
+		Claw.closeClaw();
 	}
 }

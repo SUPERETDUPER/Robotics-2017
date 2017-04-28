@@ -52,32 +52,19 @@ public class Lift extends EV3LargeRegulatedMotor {
 			// Turn until stall
 			get().setSpeed(GlobalConstants.LIFT_SPEED);
 			Claw.openClaw();
-			get().backward();
+			get().forward();
 			while (!get().isStalled()) {
 				Delay.msDelay(GlobalConstants.IDLE_LOOP_LONG_DELAY);
 			}
 
-			// Let float until stall
-			get().flt(true);
-			int previousTachoCount;
-			int tachoCount = get().getTachoCount();
-			do {
-				Delay.msDelay(GlobalConstants.IDLE_LOOP_LONG_DELAY);
-				previousTachoCount = tachoCount;
-				tachoCount = get().getTachoCount();
-				if (previousTachoCount == tachoCount) {
-					break;
-				}
-			} while (true);
-
 			// Raise lift
-			get().rotate(GlobalConstants.LIFT_DEGREES);
+			get().rotate(-GlobalConstants.LIFT_DEGREES_CALIBRATE);
 
 			// Reset_tacho_count
 			get().resetTachoCount();
 
 			// Update status
-			status = Lift.STATUS_UP;
+			status = Lift.STATUS_DOWN;
 		}
 	}
 
@@ -104,11 +91,14 @@ public class Lift extends EV3LargeRegulatedMotor {
 		}
 		return lift;
 	}
+	public static void lowerLift() {
+		lowerLift(false);
+	}
 
 	/**
 	 * Moves lift in down position.
 	 */
-	public static void lowerLift() {
+	public static void lowerLift(boolean immediateReturn) {
 		// Calibrate if needed
 		if (status == Lift.STATUS_UNCALIBRATED) {
 			calibrateLift();
@@ -118,11 +108,11 @@ public class Lift extends EV3LargeRegulatedMotor {
 		if (status == Lift.STATUS_UP) {
 			// Lower till TachoCount < 0
 			get().setSpeed(GlobalConstants.LIFT_SPEED);
-			get().backward();
-			while (!get().isStalled()) {
-				Delay.msDelay(GlobalConstants.IDLE_LOOP_SHORT_DELAY);
+			if (immediateReturn) {
+				get().rotate(-get().getTachoCount(), true);
+			} else {
+				get().rotate(-get().getTachoCount());
 			}
-			get().flt(true);
 
 			// Update status
 			status = Lift.STATUS_DOWN;
@@ -148,9 +138,9 @@ public class Lift extends EV3LargeRegulatedMotor {
 			// Lift to position
 			get().setSpeed(GlobalConstants.LIFT_SPEED);
 			if (immediateReturn) {
-				get().rotate(-get().getTachoCount(), true);
+				get().rotate(-GlobalConstants.LIFT_DEGREES, true);
 			} else {
-				get().rotate(-get().getTachoCount());
+				get().rotate(-GlobalConstants.LIFT_DEGREES);
 			}
 
 			// Update status
