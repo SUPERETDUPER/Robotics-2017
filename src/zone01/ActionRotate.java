@@ -1,10 +1,10 @@
 package zone01;
 
-public class SequenceAngle implements BaseSequence {
+public class ActionRotate implements ActionBase {
 
 	private int angle;
 
-	public SequenceAngle(int angle) {
+	public ActionRotate(int angle) {
 		this.angle = angle;
 	}
 

@@ -53,7 +53,7 @@ public final class GlobalConstants {
 
 	// TODO : Set values
 	// Values for Lift
-	final static int LIFT_DEGREES = 360;
+	final static int LIFT_DEGREES = 330;
 	final static int LIFT_SPEED = 500;
 
 	// TODO : Reduce for effecicency
@@ -68,17 +68,18 @@ public final class GlobalConstants {
 	final static int KI = 0;
 	final static int KD = 0;
 	final static int MIDPOINT = 0;
-	final static int LEFT = 0;
-	final static int RIGHT = 1;
-	final static int STOP = 2;
-	final static int END = 3;
 
 	// TODO : Set Values
-	// Chassis operations
-	final static int ANGULAR_SPEED = 0;
+	// Actions speeds
+	final static int ANGULAR_SPEED_SLOW = 0;
+	final static int ANGULAR_SPEED_FAST = 0;
+	final static int LINEAR_SPEED_SLOW = 0;
+	final static int LINEAR_SPEED_FAST = 0;
+
+	// Navigation constants
+	final static float DISTANCE_TO_ENTER_GREEN_ZONE = 0;
 
 	// Helper
 	// Pickup object
-	final static int LINEAR_SPEED_SLOW = 0;
 	final static int DISTANCE_CLAW_TO_SENSOR = 0;
 }

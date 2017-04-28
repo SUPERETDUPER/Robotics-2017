@@ -59,15 +59,25 @@ public class Lift extends EV3LargeRegulatedMotor {
 
 			// Let float until stall
 			get().flt(true);
-			while (!get().isStalled()) {
+			int previousTachoCount;
+			int tachoCount = get().getTachoCount();
+			do {
 				Delay.msDelay(GlobalConstants.IDLE_LOOP_LONG_DELAY);
-			}
+				previousTachoCount = tachoCount;
+				tachoCount = get().getTachoCount();
+				if (previousTachoCount == tachoCount) {
+					break;
+				}
+			} while (true);
+
+			// Raise lift
+			get().rotate(GlobalConstants.LIFT_DEGREES);
 
 			// Reset_tacho_count
 			get().resetTachoCount();
 
 			// Update status
-			status = Lift.STATUS_DOWN;
+			status = Lift.STATUS_UP;
 		}
 	}
 
@@ -109,7 +119,7 @@ public class Lift extends EV3LargeRegulatedMotor {
 			// Lower till TachoCount < 0
 			get().setSpeed(GlobalConstants.LIFT_SPEED);
 			get().backward();
-			while (get().getTachoCount() > 0) {
+			while (!get().isStalled()) {
 				Delay.msDelay(GlobalConstants.IDLE_LOOP_SHORT_DELAY);
 			}
 			get().flt(true);
@@ -119,10 +129,14 @@ public class Lift extends EV3LargeRegulatedMotor {
 		}
 	}
 
+	public static void raiseLift() {
+		raiseLift(false);
+	}
+
 	/**
 	 * Moves lift in up position.
 	 */
-	public static void raiseLift() {
+	public static void raiseLift(boolean immediateReturn) {
 		// Calibrate if needed
 		if (status == Lift.STATUS_UNCALIBRATED) {
 			calibrateLift();
@@ -133,7 +147,11 @@ public class Lift extends EV3LargeRegulatedMotor {
 
 			// Lift to position
 			get().setSpeed(GlobalConstants.LIFT_SPEED);
-			get().rotate(GlobalConstants.LIFT_DEGREES);
+			if (immediateReturn) {
+				get().rotate(-get().getTachoCount(), true);
+			} else {
+				get().rotate(-get().getTachoCount());
+			}
 
 			// Update status
 			status = Lift.STATUS_UP;

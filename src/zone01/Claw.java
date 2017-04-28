@@ -121,6 +121,13 @@ public class Claw extends EV3MediumRegulatedMotor {
 		return claw;
 	}
 
+	public static void markAsCalibrated(boolean isOpen) {
+		if (isOpen) {
+			status = STATUS_OPENED;
+		} else {
+			status = STATUS_CLOSED;
+		}
+	}
 	/**
 	 * Opens claw.
 	 */
@@ -147,6 +154,7 @@ public class Claw extends EV3MediumRegulatedMotor {
 			status = Claw.STATUS_OPENED;
 		}
 	}
+
 	/**
 	 * Instantiates a new claw object. Private so that only one instance can be
 	 * created by getClaw

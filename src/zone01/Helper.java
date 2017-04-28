@@ -21,7 +21,7 @@ public class Helper {
 
 		Claw.openClaw();
 	}
-	public static void executeSequence(ArrayList<BaseSequence> sequence) {
+	public static void executeSequence(ArrayList<ActionBase> sequence) {
 		for (int i = 0; i < sequence.size(); i++) {
 			sequence.get(i).execute();
 		}

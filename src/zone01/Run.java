@@ -73,6 +73,8 @@ public class Run {
 
 		addEscapeKeyListner();
 
+		Claw.markAsCalibrated(true);
+
 		Lift.raiseLift();
 
 		Delay.msDelay(5000);

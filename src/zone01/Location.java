@@ -5,6 +5,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class Location {
 	public static AtomicInteger idIncrement = new AtomicInteger(0);
+	private ArrayList<ActionBase> sequence = new ArrayList<>();
 
 	private final int id;
 
@@ -12,17 +13,24 @@ public abstract class Location {
 		this.id = idIncrement.getAndIncrement();
 	}
 
-	protected abstract void addToSequence(ArrayList<BaseSequence> sequence,
-			Location currentLocation);
+	public Location(Area[] area) {
+		this.id = idIncrement.getAndIncrement();
 
-	private ArrayList<BaseSequence> buildSequence(Location currentLocation) {
-		ArrayList<BaseSequence> sequence = new ArrayList<>();
-		addToSequence(sequence, currentLocation);
-		return sequence;
+		for (int i = 0; i < area.length; i++) {
+			area[i].add(this);
+		}
 	}
+
+	protected abstract void buildOnSequence(ArrayList<ActionBase> sequence);
 
 	public int getId() {
 		return id;
+	}
+
+	private ArrayList<ActionBase> getSequence() {
+		sequence.clear();
+		buildOnSequence(sequence);
+		return sequence;
 	}
 
 	public void moveTo() {
@@ -30,12 +38,12 @@ public abstract class Location {
 		if (currentLocation.getId() == this.getId()) {
 			return;
 		}
-		Helper.executeSequence(this.buildSequence(currentLocation));
+		Helper.executeSequence(this.getSequence());
 		Navigation.updateLocation(this);
 	}
-
 	public void throwUniplementedException(Location destination) {
 		throw new RuntimeException("Unimplemented Destination ("
 				+ destination.getId() + ") from origin (");
 	}
+
 }

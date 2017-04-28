@@ -1,5 +1,5 @@
 package zone01;
 
-interface BaseSequence {
+interface ActionBase {
 	public void execute();
 }

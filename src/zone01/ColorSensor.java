@@ -92,7 +92,7 @@ public class ColorSensor extends EV3ColorSensor {
 	 * @return the color ID of the inactive sensor. Returns -1 if lineFollower
 	 *         is not moving
 	 */
-	public static int getColorIDInactive() {
+	private static int getColorIDInactive() {
 		if (!LineFollowerData.isMoving()) {
 			throw new RuntimeException(
 					"Called for inactive color ID but line follower not active");
@@ -158,10 +158,49 @@ public class ColorSensor extends EV3ColorSensor {
 		}
 	}
 
-	public static void waitForBlackLine() {
+	public static boolean waitForLineEither() {
+		int colorLeft;
+		int colorRight;
+		while (true) {
+			colorLeft = getLeft().getColorID();
+			colorRight = getRight().getColorID();
+			if (colorLeft == Color.BLACK) {
+				return true;
+			}
+			if (colorRight == Color.BLACK) {
+				return false;
+			}
+			Delay.msDelay(GlobalConstants.IDLE_LOOP_SHORT_DELAY);
+		}
+
+	}
+
+	public static void waitForLineInactive(int lineColor) {
 		int color;
 		while (true) {
 			color = getColorIDInactive();
+			if (color == lineColor) {
+				break;
+			}
+			Delay.msDelay(GlobalConstants.IDLE_LOOP_SHORT_DELAY);
+		}
+	}
+
+	public static void waitForLineLeft() {
+		int color;
+		while (true) {
+			color = getLeft().getColorID();
+			if (color == Color.BLACK) {
+				break;
+			}
+			Delay.msDelay(GlobalConstants.IDLE_LOOP_SHORT_DELAY);
+		}
+	}
+
+	public static void waitForLineRight() {
+		int color;
+		while (true) {
+			color = getRight().getColorID();
 			if (color == Color.BLACK) {
 				break;
 			}
@@ -169,6 +208,7 @@ public class ColorSensor extends EV3ColorSensor {
 		}
 	}
 	/**
+	 * }
 	 * Instantiates a new color sensor. Used only at start. Do not make the
 	 * method time consuming or else review early implementation
 	 */

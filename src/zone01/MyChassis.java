@@ -84,24 +84,24 @@ public class MyChassis extends WheeledChassis {
 		return mChassis;
 	}
 
+	public static void moveToUltrasonicDistance(int distance, int linearSpeed) {
+		float distanceToTravel = MyUltrasonic.getDistance() - distance;
+		get().setLinearSpeed(linearSpeed);
+		get().travel(distanceToTravel);
+	}
 	/**
 	 * Turns chassis around
 	 */
 	public static void turnAround(boolean waitForCompletion) {
 		get().stop();
-		get().setAngularSpeed(GlobalConstants.ANGULAR_SPEED);
+		get().setAngularSpeed(GlobalConstants.ANGULAR_SPEED_FAST);
 		get().rotate(180);
 		if (waitForCompletion) {
 			get().waitComplete();
 		}
 	}
+
 	private MyChassis() {
 		super(createWheels(), WheeledChassis.TYPE_DIFFERENTIAL);
-	}
-
-	public static void moveToUltrasonicDistance(int distance, int linearSpeed) {
-		float distanceToTravel = MyUltrasonic.getDistance() - distance;
-		get().setLinearSpeed(linearSpeed);
-		get().travel(distanceToTravel);
 	}
 }
