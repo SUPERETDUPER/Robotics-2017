@@ -4,26 +4,26 @@ import lejos.robotics.Color;
 
 public class ActionFollowToIntersection extends ActionBase {
 
-	private boolean followLeft;
+	private boolean intersectionOnRight;
 	private int colorToWaitFor;
 
 	/**
 	 * Follow line till intersection
 	 *
-	 * @param followLeft side of line to follow
+	 * @param intersectionOnRight side of line to follow
 	 */
-	public ActionFollowToIntersection(boolean followLeft) {
-		this(followLeft, Color.BLACK);
+	public ActionFollowToIntersection(boolean intersectionOnRight) {
+		this(intersectionOnRight, Color.BLACK);
 	}
 
 	/**
 	 * Follow line till intersection
 	 *
-	 * @param followLeft if true follows left side
+	 * @param intersectionOnRight if true follows left side
 	 * @param colorToWaitFor color of intersection
 	 */
-	public ActionFollowToIntersection(boolean followLeft, int colorToWaitFor) {
-		this.followLeft = followLeft;
+	public ActionFollowToIntersection(boolean intersectionOnRight, int colorToWaitFor) {
+		this.intersectionOnRight = intersectionOnRight;
 		this.colorToWaitFor = colorToWaitFor;
 
 	}
@@ -35,7 +35,7 @@ public class ActionFollowToIntersection extends ActionBase {
 	 */
 	@Override
 	public void execute() {
-		if (followLeft) {
+		if (intersectionOnRight) {
 			LineFollowerData.setToLeft();
 		} else {
 			LineFollowerData.setToRight();
@@ -54,7 +54,7 @@ public class ActionFollowToIntersection extends ActionBase {
 	@Override
 	public String getLogMessage() {
 		String message = "Follow line on ";
-		if (followLeft) {
+		if (intersectionOnRight) {
 			message += "left";
 		} else {
 			message += "right";
