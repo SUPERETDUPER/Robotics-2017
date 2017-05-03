@@ -58,7 +58,11 @@ public class MyUltrasonic extends EV3UltrasonicSensor {
 		if (mSensor == null && !closed) {
 			synchronized (MyUltrasonic.class) {
 				if (mSensor == null && !closed) {
-					mSensor = new MyUltrasonic();
+					try {
+						mSensor = new MyUltrasonic();
+					} catch (IllegalArgumentException e) {
+						mSensor = new MyUltrasonic();
+					}
 				}
 			}
 		}

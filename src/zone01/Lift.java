@@ -58,7 +58,7 @@ public class Lift extends EV3LargeRegulatedMotor {
 			}
 
 			// Raise lift
-			get().rotate(-GlobalConstants.LIFT_DEGREES_CALIBRATE);
+			get().rotate(-GlobalConstants.LIFT_DEGREES_DOWN);
 
 			// Reset_tacho_count
 			get().resetTachoCount();
@@ -138,9 +138,11 @@ public class Lift extends EV3LargeRegulatedMotor {
 			// Lift to position
 			get().setSpeed(GlobalConstants.LIFT_SPEED);
 			if (immediateReturn) {
-				get().rotate(-GlobalConstants.LIFT_DEGREES, true);
+				get().rotate(-GlobalConstants.LIFT_DEGREES_UP
+						+ GlobalConstants.LIFT_DEGREES_DOWN, true);
 			} else {
-				get().rotate(-GlobalConstants.LIFT_DEGREES);
+				get().rotate(-GlobalConstants.LIFT_DEGREES_UP
+						+ GlobalConstants.LIFT_DEGREES_DOWN);
 			}
 
 			// Update status
@@ -154,4 +156,5 @@ public class Lift extends EV3LargeRegulatedMotor {
 	private Lift() {
 		super(GlobalConstants.PORT_MOTOR_LIFT);
 	}
+
 }

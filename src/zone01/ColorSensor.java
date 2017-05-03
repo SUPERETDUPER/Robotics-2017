@@ -38,11 +38,10 @@ import lejos.utility.Delay;
  */
 public class ColorSensor extends EV3ColorSensor {
 
-	private static int LENGTH_OF_RED_MODE_SAMPLE = 1;
-
 	private static ColorSensor sensorLeft;
 	private static ColorSensor sensorRight;
 	private static ColorSensor sensorClaw;
+
 	private static boolean closed = false;
 
 	// Samples providers for line following sensor
@@ -53,7 +52,8 @@ public class ColorSensor extends EV3ColorSensor {
 	private static final Object RIGHT_LOCK = new Object();
 	private static final Object CLAW_LOCK = new Object();
 
-	private static final float[] sample = new float[LENGTH_OF_RED_MODE_SAMPLE];
+	private static final float[] sampleLeft = new float[1];
+	private static final float[] sampleRight = new float[1];
 
 	public synchronized static void closePorts() {
 		if (sensorLeft != null) {
@@ -150,11 +150,13 @@ public class ColorSensor extends EV3ColorSensor {
 			throw new RuntimeException(
 					"Called for active color sensor reading but line follower not moving");
 		} else if (LineFollowerData.isSetToLeft()) {
-			providerLeft.fetchSample(sample, 0);
-			return sample[0];
+			getLeft();
+			providerLeft.fetchSample(sampleLeft, 0);
+			return sampleLeft[0];
 		} else {
-			providerRight.fetchSample(sample, 0);
-			return sample[0];
+			getRight();
+			providerRight.fetchSample(sampleRight, 0);
+			return sampleRight[0];
 		}
 	}
 

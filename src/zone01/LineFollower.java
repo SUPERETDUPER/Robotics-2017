@@ -27,17 +27,19 @@ import lejos.utility.Delay;
  * The Class LineFollower. Thread (implements runnable).
  * Interacts with LineFollowerData and ColorSensor
  */
-public final class LineFollower implements Runnable {
+final class LineFollower implements Runnable {
 
 	/**
 	 * Instantiates a new line follower.
 	 */
 	public LineFollower() {
+		ColorSensor.getLeft();
+		ColorSensor.getRight();
 	}
 
 	/*
 	 * Core of line following thread
-	 * 
+	 *
 	 * @see java.lang.Runnable#run()
 	 */
 	@Override
@@ -66,7 +68,7 @@ public final class LineFollower implements Runnable {
 								+ GlobalConstants.KD * derivative;
 
 						// Switch correction if side switches
-						if (LineFollowerData.isSetToRight()) {
+						if (LineFollowerData.isSetToLeft()) {
 							correction *= -1;
 						}
 

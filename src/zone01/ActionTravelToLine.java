@@ -1,6 +1,10 @@
 package zone01;
 
-public class ActionTravelToLine implements ActionBase {
+/**
+ * @author superetduper
+ *         Travel straight to the first line and the line up
+ */
+public class ActionTravelToLine extends ActionBase {
 	private final boolean lineUp;
 
 	public ActionTravelToLine(boolean lineUp) {
@@ -9,6 +13,8 @@ public class ActionTravelToLine implements ActionBase {
 
 	@Override
 	public void execute() {
+		// TODO : Method is not precise. Only corrects once.
+		LineFollowerData.stop();
 		MyChassis.get().setVelocity(GlobalConstants.LINEAR_SPEED_SLOW, 0);
 		boolean isLeftSide = ColorSensor.waitForLineEither();
 		if (lineUp) {

@@ -23,17 +23,17 @@ package zone01;
 
 /**
  * The Class LineFollowerData.
- * 
+ *
  * Has three states
  * 1. Ended/Not Ended : When Ended thread ends and Line Following can no longer
  * start.
  * 2. Moving/Not Moving : Determines whether the robot is following the line or
  * not
  * 3. Left/Right : Determines which side of the line to follow when moving
- * 
+ *
  * Static class
  */
-public class LineFollowerData {
+class LineFollowerData {
 	private static volatile boolean moving = false;
 	private static volatile boolean ended = false;
 	private static volatile boolean left = true;
@@ -48,7 +48,7 @@ public class LineFollowerData {
 
 	/**
 	 * Checks if line following is ended.
-	 * 
+	 *
 	 * @return true, if is ended
 	 */
 	public static boolean isEnded() {
@@ -57,7 +57,7 @@ public class LineFollowerData {
 
 	/**
 	 * Checks if line following is moving.
-	 * 
+	 *
 	 * @return true, if is moving
 	 */
 	public static boolean isMoving() {
@@ -66,7 +66,7 @@ public class LineFollowerData {
 
 	/**
 	 * Checks if line following is set to the left.
-	 * 
+	 *
 	 * @return true, if it is set to the left
 	 */
 	public static boolean isSetToLeft() {
@@ -75,7 +75,7 @@ public class LineFollowerData {
 
 	/**
 	 * Checks if line following is set to the right.
-	 * 
+	 *
 	 * @return true, if it is set to the right
 	 */
 	public static boolean isSetToRight() {

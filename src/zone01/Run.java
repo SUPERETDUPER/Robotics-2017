@@ -69,9 +69,10 @@ public class Run {
 		// Start line follower
 		Thread lineThread = new Thread(new LineFollower());
 		lineThread.start();
-
-		Helper.pickupObject();
-		Helper.dropObject();
+		LineFollowerData.start();
+		Button.ENTER.waitForPressAndRelease();
+		LineFollowerData.setToRight();
+		Button.ENTER.waitForPressAndRelease();
 		end();
 	}
 }

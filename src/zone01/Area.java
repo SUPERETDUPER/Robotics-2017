@@ -1,29 +1,49 @@
 package zone01;
 
 import java.util.ArrayList;
-import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * @author superetduper
+ *         Group of Location stored together for easy sorting
+ *         Stores only location id
+ */
 public class Area {
-	private static AtomicInteger idIncrement = new AtomicInteger(0);
-	private final ArrayList<Integer> locationIds = new ArrayList<>();
-	private final int id;
+	private final ArrayList<Location> locations = new ArrayList<>();
 
 	public Area() {
-		id = idIncrement.getAndIncrement();
+		this(new Location[]{});
 	}
 
+	/**
+	 * Create an Area
+	 *
+	 * @param locations
+	 */
+	public Area(Location[] locations) {
+		for (int i = 0; i < locations.length; i++) {
+			this.locations.add(locations[i]);
+		}
+	}
+
+	/**
+	 * Add location to group
+	 *
+	 * @param location
+	 */
 	public void add(Location location) {
-		locationIds.add(location.getId());
+		this.locations.add(location);
 	}
 
+	/**
+	 * Check if location is in group
+	 *
+	 * @param location
+	 * @return
+	 */
 	public boolean contains(Location location) {
-		if (locationIds.contains(location.getId())) {
+		if (locations.contains(location)) {
 			return true;
 		}
 		return false;
-	}
-
-	public int getId() {
-		return id;
 	}
 }

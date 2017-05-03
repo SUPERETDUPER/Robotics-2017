@@ -43,8 +43,8 @@ public final class GlobalConstants {
 
 	// TODO : Test values especially with line follower
 	// Delays between loops to reduce CPU usage
-	static final int IDLE_LOOP_SHORT_DELAY = 50;
-	static final int IDLE_LOOP_LONG_DELAY = 100;
+	static final int IDLE_LOOP_SHORT_DELAY = 150;
+	static final int IDLE_LOOP_LONG_DELAY = 300;
 
 	// TODO : Set values
 	// Values for Chassis
@@ -53,22 +53,22 @@ public final class GlobalConstants {
 
 	// TODO : Set values
 	// Values for Lift
-	final static int LIFT_DEGREES_CALIBRATE = 140;
-	final static int LIFT_DEGREES = 260;
+	final static int LIFT_DEGREES_DOWN = 160;
+	final static int LIFT_DEGREES_UP = 400;
 	final static int LIFT_SPEED = 600;
 
-	// TODO : Reduce for effecicency
+	// TODO : Reduce for efficiency
 	// Values for Claw
 	// final static int CLAW_SPEED = 500; USING MAX SPEED
 	final static int CLAW_DEGREES = 2000;
 
 	// TODO : Set values
 	// Values for line following
-	final static int LINEAR_SPEED_LINE = 0;
-	final static int KP = 1;
+	final static int LINEAR_SPEED_LINE = 10;
+	final static int KP = 100;
 	final static int KI = 0;
 	final static int KD = 0;
-	final static int MIDPOINT = 0;
+	final static float MIDPOINT = (float) 0.46;
 
 	// TODO : Set Values
 	// Actions speeds
@@ -82,5 +82,5 @@ public final class GlobalConstants {
 
 	// Helper
 	// Pickup object
-	final static float DISTANCE_CLAW_TO_SENSOR = (float) 0.05;
+	final static float DISTANCE_CLAW_TO_SENSOR = (float) 0.04;
 }

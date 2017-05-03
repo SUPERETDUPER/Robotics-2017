@@ -1,21 +1,21 @@
 package zone01;
 
 import java.util.ArrayList;
-import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * @author superetduper
+ *         Call the destination to move to
+ */
 public abstract class Location {
-	public static AtomicInteger idIncrement = new AtomicInteger(0);
-	private ArrayList<ActionBase> sequence = new ArrayList<>();
 
-	private final int id;
+	private final String DESCRIPTION;
 
-	public Location() {
-		this.id = idIncrement.getAndIncrement();
+	public Location(String description) {
+		DESCRIPTION = description;
 	}
 
-	public Location(Area[] area) {
-		this.id = idIncrement.getAndIncrement();
-
+	public Location(String description, Area[] area) {
+		DESCRIPTION = description;
 		for (int i = 0; i < area.length; i++) {
 			area[i].add(this);
 		}
@@ -23,27 +23,28 @@ public abstract class Location {
 
 	protected abstract void buildOnSequence(ArrayList<ActionBase> sequence);
 
-	public int getId() {
-		return id;
+	public String getDescription() {
+		return DESCRIPTION;
 	}
 
 	private ArrayList<ActionBase> getSequence() {
-		sequence.clear();
+		ArrayList<ActionBase> sequence = new ArrayList<>();
 		buildOnSequence(sequence);
 		return sequence;
 	}
-
 	public void moveTo() {
 		Location currentLocation = Navigation.getLocation();
-		if (currentLocation.getId() == this.getId()) {
+		if (currentLocation == this) {
 			return;
 		}
-		Helper.executeSequence(this.getSequence());
+		ArrayList<ActionBase> sequence = this.getSequence();
+		ActionBase.executeSequence(sequence);
 		Navigation.updateLocation(this);
 	}
-	public void throwUniplementedException(Location destination) {
-		throw new RuntimeException("Unimplemented Destination ("
-				+ destination.getId() + ") from origin (");
+	public void throwUniplementedException() {
+		throw new RuntimeException(
+				"Unimplemented : " + Navigation.getLocation().getDescription()
+						+ " to " + this.getDescription());
 	}
 
 }
