@@ -1,16 +1,21 @@
 package zone01;
 
 public class ActionRotate extends ActionBase {
+	public static int LEFT = 0;
+	public static int RIGHT = 1;
+	public static int CENTER = 2;
 
-	private int angle;
+	private final int angle;
+	private final int rotateAround;
 
 	/**
 	 * Rotate robot
 	 *
 	 * @param angle angle to rotate by
 	 */
-	public ActionRotate(int angle) {
+	public ActionRotate(int angle, int rotateAround) {
 		this.angle = angle;
+		this.rotateAround = rotateAround;
 	}
 
 	/*
@@ -21,7 +26,18 @@ public class ActionRotate extends ActionBase {
 	@Override
 	public void execute() {
 		LineFollowerData.stop();
-		MyChassis.get().rotate(angle);
+		if (rotateAround == LEFT) {
+			MyChassis.get().arc(GlobalConstants.DISTANCE_BETWEEN_SENSORS / 2,
+					angle);
+		} else if (rotateAround == RIGHT) {
+			MyChassis.get().arc(-GlobalConstants.DISTANCE_BETWEEN_SENSORS / 2,
+					angle);
+		} else if (rotateAround == CENTER) {
+			MyChassis.get().rotate(angle);
+		} else {
+			throw new RuntimeException("Illegal argument for rotateAround");
+		}
+		MyChassis.get().waitComplete();
 	}
 
 	/*

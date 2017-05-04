@@ -4,7 +4,7 @@ public class ActionTravel extends ActionBase {
 	private final float distance;
 
 	/**
-	 * @param distance (in milimeters)
+	 * @param distance (in millimeters)
 	 */
 	public ActionTravel(float distance) {
 		this.distance = distance;
@@ -14,6 +14,7 @@ public class ActionTravel extends ActionBase {
 	public void execute() {
 		LineFollowerData.stop();
 		MyChassis.get().travel(distance);
+		MyChassis.get().waitComplete();
 	}
 
 	/*

@@ -77,8 +77,12 @@ public final class GlobalConstants {
 	final static int LINEAR_SPEED_SLOW = 100; // Millimeters per second
 	final static int LINEAR_SPEED_FAST = 100; // Millimeters per second
 
+	// Actions values
+	final static int DISTANCE_BETWEEN_SENSORS = 0;
+
 	// Navigation constants
 	final static float DISTANCE_TO_ENTER_GREEN_ZONE = 0;
+	final static float DISTANCE_TO_LEAVE_GREEN_ZONE = 0;
 
 	// Helper
 	// Pickup object
