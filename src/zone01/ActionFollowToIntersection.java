@@ -4,21 +4,15 @@ import lejos.robotics.Color;
 
 public class ActionFollowToIntersection extends ActionBase {
 
-	private final boolean intersectionOnRight;
+	private final int intersection;
 	private final int colorToWaitFor;
-	private final boolean passIntersection;
 
 	public ActionFollowToIntersection() {
-		this(true, false, Color.BLACK);
+		this(GlobalConstants.LEFT, Color.BLACK);
 	}
 
-	public ActionFollowToIntersection(boolean intersectionOnRight) {
-		this(intersectionOnRight, false, Color.BLACK);
-	}
-
-	public ActionFollowToIntersection(boolean intersectionOnRight,
-			boolean passIntersection) {
-		this(intersectionOnRight, passIntersection, Color.BLACK);
+	public ActionFollowToIntersection(int intersection) {
+		this(intersection, Color.BLACK);
 	}
 
 	/**
@@ -27,11 +21,9 @@ public class ActionFollowToIntersection extends ActionBase {
 	 * @param intersectionOnRight if true follows left side
 	 * @param colorToWaitFor color of intersection
 	 */
-	public ActionFollowToIntersection(boolean intersectionOnRight,
-			boolean passIntersection, int colorToWaitFor) {
-		this.intersectionOnRight = intersectionOnRight;
+	public ActionFollowToIntersection(int intersection, int colorToWaitFor) {
+		this.intersection = intersection;
 		this.colorToWaitFor = colorToWaitFor;
-		this.passIntersection = passIntersection;
 	}
 
 	/*
@@ -41,16 +33,15 @@ public class ActionFollowToIntersection extends ActionBase {
 	 */
 	@Override
 	public void execute() {
-		if (intersectionOnRight) {
+		if (intersection == GlobalConstants.RIGHT) {
 			LineFollowerData.setToLeft();
-		} else {
+		} else if (intersection == GlobalConstants.LEFT) {
 			LineFollowerData.setToRight();
+		} else {
+			throw new RuntimeException();
 		}
 		LineFollowerData.start();
-		ColorSensor.waitForLineInactive(colorToWaitFor);
-		if (passIntersection) {
-			ColorSensor.waitForLineInactive(Color.WHITE);
-		}
+		ColorSensor.waitForColor(intersection, colorToWaitFor);;
 	}
 
 	/*
@@ -63,7 +54,7 @@ public class ActionFollowToIntersection extends ActionBase {
 	@Override
 	public String getLogMessage() {
 		String message = "Follow line on ";
-		if (intersectionOnRight) {
+		if (intersection == GlobalConstants.RIGHT) {
 			message += "left";
 		} else {
 			message += "right";

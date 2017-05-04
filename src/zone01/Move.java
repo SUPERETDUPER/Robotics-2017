@@ -5,11 +5,6 @@ import java.util.Arrays;
 import java.util.LinkedList;
 
 public class Move {
-	private static Node currentLocation;
-	public static Node getLocation() {
-		return currentLocation;
-	}
-
 	private final Node destination;
 
 	public Move(Node destination) {
@@ -24,10 +19,10 @@ public class Move {
 		LinkedList<ArrayList<Node>> queue = new LinkedList<>();
 
 		// Add current location to visited
-		visited.add(getLocation());
+		visited.add(Navigation.getLocation());
 
 		// Add current path (just currentLocation) to queue
-		queue.add(new ArrayList<>(Arrays.asList(getLocation())));
+		queue.add(new ArrayList<>(Arrays.asList(Navigation.getLocation())));
 
 		// current path in graph
 		ArrayList<Node> current;

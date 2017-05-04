@@ -79,6 +79,7 @@ public final class GlobalConstants {
 
 	// Actions values
 	final static int DISTANCE_BETWEEN_SENSORS = 0;
+	final static int LINE_THICKNESS = 21;
 
 	// Navigation constants
 	final static float DISTANCE_TO_ENTER_GREEN_ZONE = 0;
@@ -87,4 +88,10 @@ public final class GlobalConstants {
 	// Helper
 	// Pickup object
 	final static float DISTANCE_CLAW_TO_SENSOR = (float) 0.04;
+
+	public static final int LEFT = 0;
+	public static final int RIGHT = 1;
+	public static final int BOTH = 2;
+	public static final int EITHER = 3;
+	public static final int INACTIVE = 4;
 }

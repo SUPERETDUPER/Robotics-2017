@@ -16,16 +16,18 @@ public class ActionTravelToLine extends ActionBase {
 		// TODO : Method is not precise. Only corrects once.
 		LineFollowerData.stop();
 		MyChassis.get().setVelocity(GlobalConstants.LINEAR_SPEED_SLOW, 0);
-		boolean isLeftSide = ColorSensor.waitForLineEither();
+		int side = ColorSensor.waitForColor(GlobalConstants.EITHER);
 		if (lineUp) {
-			if (isLeftSide) {
-				MyChassis.get().setVelocity(0,
-						GlobalConstants.ANGULAR_SPEED_SLOW);
-				ColorSensor.waitForLineRight();
+			if (side == GlobalConstants.LEFT) {
+				MyChassis.get().arc(
+						GlobalConstants.DISTANCE_BETWEEN_SENSORS / 2,
+						Double.POSITIVE_INFINITY);
+				ColorSensor.waitForColor(GlobalConstants.RIGHT);
 			} else {
-				MyChassis.get().setVelocity(0,
-						-GlobalConstants.ANGULAR_SPEED_SLOW);
-				ColorSensor.waitForLineLeft();
+				MyChassis.get().arc(
+						-GlobalConstants.DISTANCE_BETWEEN_SENSORS / 2,
+						Double.POSITIVE_INFINITY);
+				ColorSensor.waitForColor(GlobalConstants.LEFT);
 			}
 		}
 		MyChassis.get().stop();

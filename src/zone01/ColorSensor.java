@@ -86,24 +86,6 @@ public class ColorSensor extends EV3ColorSensor {
 	}
 
 	/**
-	 * Gets the color ID of what the line follower is not using. Should not be
-	 * used if line follower is not moving
-	 *
-	 * @return the color ID of the inactive sensor. Returns -1 if lineFollower
-	 *         is not moving
-	 */
-	private static int getColorIDInactive() {
-		if (!LineFollowerData.isMoving()) {
-			throw new RuntimeException(
-					"Called for inactive color ID but line follower not active");
-		} else if (LineFollowerData.isSetToLeft()) {
-			return getRight().getColorID();
-		} else {
-			return getLeft().getColorID();
-		}
-	}
-
-	/**
 	 * Gets the left sensor.
 	 *
 	 * @return the left sensor
@@ -159,52 +141,58 @@ public class ColorSensor extends EV3ColorSensor {
 			return sampleRight[0];
 		}
 	}
-
-	public static boolean waitForLineEither() {
-		int colorLeft;
-		int colorRight;
-		while (true) {
-			colorLeft = getLeft().getColorID();
-			colorRight = getRight().getColorID();
-			if (colorLeft == Color.BLACK) {
-				return true;
-			}
-			if (colorRight == Color.BLACK) {
-				return false;
-			}
-			Delay.msDelay(GlobalConstants.IDLE_LOOP_SHORT_DELAY);
-		}
-
+	public static int waitForColor(int sensor) {
+		return waitForColor(sensor, Color.BLACK);
 	}
-
-	public static void waitForLineInactive(int lineColor) {
-		int color;
+	public static int waitForColor(int sensor, int color) {
+		boolean doneLeft = false;
+		boolean doneRight = false;
 		while (true) {
-			color = getColorIDInactive();
-			if (color == lineColor) {
-				break;
+			if (color == getLeft().getColorID()) {
+				doneLeft = true;
 			}
-			Delay.msDelay(GlobalConstants.IDLE_LOOP_SHORT_DELAY);
-		}
-	}
-
-	public static void waitForLineLeft() {
-		int color;
-		while (true) {
-			color = getLeft().getColorID();
-			if (color == Color.BLACK) {
-				break;
+			if (color == getRight().getColorID()) {
+				doneRight = true;
 			}
-			Delay.msDelay(GlobalConstants.IDLE_LOOP_SHORT_DELAY);
-		}
-	}
 
-	public static void waitForLineRight() {
-		int color;
-		while (true) {
-			color = getRight().getColorID();
-			if (color == Color.BLACK) {
-				break;
+			switch (sensor) {
+				case GlobalConstants.LEFT :
+					if (doneLeft) {
+						return GlobalConstants.LEFT;
+					}
+					break;
+				case GlobalConstants.RIGHT :
+					if (doneRight) {
+						return GlobalConstants.RIGHT;
+					}
+					break;
+				case GlobalConstants.EITHER :
+					if (doneLeft) {
+						return GlobalConstants.LEFT;
+					}
+					if (doneRight) {
+						return GlobalConstants.RIGHT;
+					}
+					break;
+				case GlobalConstants.BOTH :
+					if (doneLeft && doneRight) {
+						return GlobalConstants.BOTH;
+					}
+					break;
+				case GlobalConstants.INACTIVE :
+					if (!LineFollowerData.isMoving()) {
+						throw new RuntimeException(
+								"Called for inactive color ID but line follower not active");
+					}
+					if (LineFollowerData.isSetToLeft() && doneRight) {
+						return GlobalConstants.RIGHT;
+					}
+					if (LineFollowerData.isSetToRight() && doneLeft) {
+						return GlobalConstants.LEFT;
+					}
+				default :
+					throw new RuntimeException(
+							"Illegal argument for sensor in color sensor wait for line");
 			}
 			Delay.msDelay(GlobalConstants.IDLE_LOOP_SHORT_DELAY);
 		}
